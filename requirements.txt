@@ -1,5 +1,9 @@
+flask==3.0.3
+flask_sqlalchemy==3.1.1
 slack_sdk==3.27.1
 SQLAlchemy==2.0.31
 psycopg[binary]==3.2.1
 tenacity==8.4.2
 python-dateutil==2.9.0.post0
+waitress==3.0.1
+htmx==1.9.12

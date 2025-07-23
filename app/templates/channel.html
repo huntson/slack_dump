@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>#{{ chan.name }}</h2>
+
+<table class="msg-table">
+  <thead>
+    <tr><th>TS</th><th>User</th><th>Text</th></tr>
+  </thead>
+  <tbody>
+  {% for m in messages.items %}
+    <tr>
+      <td>{{ m.ts }}</td>
+      <td>{{ users.get(m.user_id).name if m.user_id in users else "" }}</td>
+      <td class="msg">{{ m.text }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<div class="pagination">
+  {% if messages.has_prev %}
+    <a class="btn" href="{{ url_for('channel_view', cid=chan.id, page=messages.prev_num) }}">Prev</a>
+  {% endif %}
+  <span>Page {{ messages.page }} / {{ messages.pages }}</span>
+  {% if messages.has_next %}
+    <a class="btn" href="{{ url_for('channel_view', cid=chan.id, page=messages.next_num) }}">Next</a>
+  {% endif %}
+</div>
+{% endblock %}

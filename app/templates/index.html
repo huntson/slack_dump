@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section>
+  <h2>What do you want to do?</h2>
+  <ul class="actions">
+    <li><a class="btn" href="{{ url_for('channels') }}">Sync Slack Channels</a></li>
+    <li><a class="btn" href="{{ url_for('browse') }}">Browse Database</a></li>
+    <li><a class="btn" href="{{ url_for('search') }}">Search Messages</a></li>
+  </ul>
+</section>
+{% endblock %}

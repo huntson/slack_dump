@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Search</h2>
+<form method="get" action="{{ url_for('search') }}">
+  <input type="text" name="q" value="{{ q }}" placeholder="search text">
+  <button class="btn" type="submit">Search</button>
+</form>
+
+{% if messages is not none %}
+  <h3>Results</h3>
+  <table class="msg-table">
+    <thead><tr><th>TS</th><th>Channel</th><th>User</th><th>Text</th></tr></thead>
+    <tbody>
+    {% for m in messages.items %}
+      <tr>
+        <td>{{ m.ts }}</td>
+        <td>{{ m.channel.name }}</td>
+        <td>{{ users.get(m.user_id).name if m.user_id in users else "" }}</td>
+        <td class="msg">{{ m.text }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    {% if messages.has_prev %}
+      <a class="btn" href="{{ url_for('search', q=q, page=messages.prev_num) }}">Prev</a>
+    {% endif %}
+    <span>Page {{ messages.page }} / {{ messages.pages }}</span>
+    {% if messages.has_next %}
+      <a class="btn" href="{{ url_for('search', q=q, page=messages.next_num) }}">Next</a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

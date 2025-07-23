@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Channels</h2>
+<ul class="chan-list">
+  {% for c in channels %}
+    <li><a href="{{ url_for('channel_view', cid=c.id) }}">#{{ c.name }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

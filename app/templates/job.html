@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Sync Job Status</h2>
+<div id="status-box" hx-get="{{ url_for('job_status_api', job_id=job_id) }}" hx-trigger="load, every 2s" hx-target="#status-box" hx-swap="outerHTML"></div>
+{% endblock %}

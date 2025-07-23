@@ -1,42 +1,32 @@
-# slackdump
+# slackdump (GUI)
 
-Simple Dockerized Python app to pull Slack channel history into a Postgres DB.
+Dockerized Flask app to **select Slack channels**, **sync messages into Postgres**, and **browse/search** the DB.
 
 ## Quick start
 
-1. Put your Slack Bot/User token into `docker-compose.yml` under `SLACK_TOKEN:`
-   - The app needs scopes to read channels and history (`channels:read`, `groups:read`, `channels:history`, `groups:history`, `users:read`, `reactions:read` at a minimum).
-   - If you need private channels, install the bot in those channels.
-
-2. Optionally edit `SLACK_CHANNELS`:
-   - `*` = all visible channels
-   - Comma separated list of channel **names** or **ids**
-
-3. Bring it up:
-
 ```bash
+unzip slackdump_gui.zip
+cd slackdump_gui
+# edit docker-compose.yml and set SLACK_TOKEN
 docker compose up --build
 ```
 
-The app will run once, ingest data, then exit. Postgres data is persisted in the `pgdata` volume.
+Open: http://localhost:8080
 
-Re-run any time you want to sync again:
+### ENV (in `docker-compose.yml`)
 
-```bash
-docker compose run --rm app
-```
+- `SLACK_TOKEN` — Bot/User token with scopes:
+  - `channels:read`, `groups:read`, `channels:history`, `groups:history`, `users:read`, `reactions:read`
+- `SLACK_TYPES` — default: public_channel,private_channel
+- `FETCH_THREADS` — true/false
+- `OLDEST_TS`, `LATEST_TS` — optional Slack timestamps (string) to bound history
 
-## Tables
+### Re-run sync
 
-- `channels` — Slack channels (public/private)
-- `users` — Slack users
-- `messages` — All messages (including threads)
-- `reactions` — Message reactions (one row per user/react)
+Just go to **Sync** in the UI and run again.
 
-## Extending
+### DB schema
+Same as the CLI version:
+- channels, users, messages, reactions
 
-- Add file downloads, attachments, etc. in `main.py` (see Slack `files.*` endpoints).
-- Add a scheduler (cron, supercronic) if you want periodic syncs.
-- Swap Postgres with anything else supported by SQLAlchemy.
-
-Generated: 2025-07-23T08:09:37.984726
+Generated 2025-07-23T08:15:32.432642

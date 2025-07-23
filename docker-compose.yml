@@ -16,18 +16,19 @@ services:
       timeout: 5s
       retries: 5
 
-  app:
+  web:
     build: .
-    container_name: slackdump-app
+    container_name: slackdump-web
     depends_on:
       db:
         condition: service_healthy
     environment:
       # --- Slack ---
       SLACK_TOKEN: "xoxb-your-token-here"
-      SLACK_CHANNELS: "*"          # Comma-separated names or ids, or * for all visible channels
-      FETCH_THREADS: "true"        # Also pull threaded replies
-      FETCH_FILES: "false"         # (placeholder) not implemented yet
+      # Optional to restrict default listed types
+      SLACK_TYPES: "public_channel,private_channel"
+      FETCH_THREADS: "true"
+      FETCH_FILES: "false"
 
       # --- DB ---
       DB_HOST: db
@@ -37,11 +38,13 @@ services:
       DB_NAME: slackdump
 
       # --- Limits / Ranges (optional) ---
-      OLDEST_TS: "0"               # Slack ts (as string). 0 = from the beginning
-      LATEST_TS: ""                # Blank = now
+      OLDEST_TS: "0"
+      LATEST_TS: ""
 
-    command: ["python", "-u", "/app/main.py"]
-    restart: "no"
+    ports:
+      - "8080:8000"
+    command: ["python", "-u", "/app/app.py"]
+    restart: "unless-stopped"
 
 volumes:
   pgdata:

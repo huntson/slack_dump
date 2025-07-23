@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Select Channels to Sync</h2>
+<form method="post" action="{{ url_for('sync') }}">
+  <div class="chan-list">
+  {% for c in channels %}
+    <label class="chan-item">
+      <input type="checkbox" name="channel_id" value="{{ c['id'] }}" {% if c['id'] in existing_ids %}checked{% endif %}>
+      <span>#{{ c['name'] }}{% if c.get('is_private') %} (private){% endif %}</span>
+    </label>
+  {% endfor %}
+  </div>
+  <button class="btn" type="submit">Start Sync</button>
+</form>
+{% endblock %}
