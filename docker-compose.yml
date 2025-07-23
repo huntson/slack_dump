@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: slackdump-db
+    environment:
+      POSTGRES_USER: slack
+      POSTGRES_PASSWORD: slack
+      POSTGRES_DB: slackdump
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U slack -d slackdump"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: slackdump-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # --- Slack ---
+      SLACK_TOKEN: "xoxb-your-token-here"
+      SLACK_CHANNELS: "*"          # Comma-separated names or ids, or * for all visible channels
+      FETCH_THREADS: "true"        # Also pull threaded replies
+      FETCH_FILES: "false"         # (placeholder) not implemented yet
+
+      # --- DB ---
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: slack
+      DB_PASSWORD: slack
+      DB_NAME: slackdump
+
+      # --- Limits / Ranges (optional) ---
+      OLDEST_TS: "0"               # Slack ts (as string). 0 = from the beginning
+      LATEST_TS: ""                # Blank = now
+
+    command: ["python", "-u", "/app/main.py"]
+    restart: "no"
+
+volumes:
+  pgdata:

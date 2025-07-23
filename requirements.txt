@@ -1,0 +1,5 @@
+slack_sdk==3.27.1
+SQLAlchemy==2.0.31
+psycopg[binary]==3.2.1
+tenacity==8.4.2
+python-dateutil==2.9.0.post0
